@@ -1,0 +1,5 @@
+Werkzeug
+Flask
+Flask-Cors
+Flask-RESTful
+python-dotenv
