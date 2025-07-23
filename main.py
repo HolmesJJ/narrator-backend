@@ -1,4 +1,5 @@
 import os
+import time
 import shutil
 import threading
 import subprocess
@@ -43,6 +44,8 @@ STATUS_MAP = {
 
 current_status = STATUS_READY
 status_lock = threading.Lock()
+
+flag = 0
 
 
 class Index(Resource):
@@ -114,10 +117,34 @@ def pipeline_runner(mp4_path):
         current_status = STATUS_READY
 
 
+class Voice(Resource):
+    def post(self):
+        if 'file' not in request.files:
+            abort(400, description='No file part in the request')
+        file = request.files['file']
+        if file.filename == '':
+            abort(400, description='No selected file')
+        if file.mimetype not in ['audio/webm', 'audio/wav', 'audio/ogg', 'audio/mpeg', 'audio/mp4', 'audio/x-m4a']:
+            abort(400, description='Unsupported audio type')
+        filename = secure_filename(file.filename)
+        global flag
+        time.sleep(3)
+        if flag == 0:
+            flag = 1
+            return {'position': 202000}, 200
+        else:
+            flag = 0
+            mp3_path = os.path.join(os.getcwd(), DATA_DIR, 'reply.mp3')
+            if not os.path.isfile(mp3_path):
+                return abort(404, description='File not found')
+            return 200
+
+
 api.add_resource(Index, '/', endpoint='index')
 api.add_resource(Data, '/data/<path:path>')
 api.add_resource(Upload, '/api/upload', endpoint='upload')
 api.add_resource(Status,  '/api/status', endpoint='status')
+api.add_resource(Voice, '/api/voice', endpoint='voice')
 
 
 if __name__ == '__main__':
