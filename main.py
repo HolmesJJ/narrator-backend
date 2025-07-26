@@ -132,7 +132,7 @@ class Voice(Resource):
         time.sleep(3)
         if flag == 0:
             flag = 1
-            return {'position': 202000}, 200
+            return {'position': 20000}, 200
         else:
             flag = 0
             mp3_path = os.path.join(os.getcwd(), DATA_DIR, 'reply.mp3')
