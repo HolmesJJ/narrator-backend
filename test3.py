@@ -12,7 +12,10 @@ def extract_mp3(mp4_path):
         'ffmpeg', '-y',
         '-i', mp4_path,
         '-q:a', '0',
-        '-map', 'a', mp3_path
+        '-map', '0:a:0',
+        '-vn',
+        '-acodec', 'libmp3lame',
+        mp3_path
     ]
     subprocess.run(cmd, check=True)
     return mp3_path
