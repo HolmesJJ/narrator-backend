@@ -1,6 +1,5 @@
 import os
 import time
-import shutil
 import threading
 import subprocess
 
@@ -84,10 +83,12 @@ class Upload(Resource):
         if not filename.lower().endswith('.mp4'):
             abort(400, description='Only .mp4 files are allowed')
         save_dir = os.path.join(os.getcwd(), DATA_DIR)
-        if os.path.exists(save_dir):
-            shutil.rmtree(save_dir)
         os.makedirs(save_dir, exist_ok=True)
-        save_path = os.path.join(save_dir, filename)
+        for output_file in ['output.mp3', 'output.mp4']:
+            output_path = os.path.join(save_dir, output_file)
+            if os.path.exists(output_path):
+                os.remove(output_path)
+        save_path = os.path.join(save_dir, 'raw.mp4')
         file.save(save_path)
         threading.Thread(target=pipeline_runner, args=(save_path,), daemon=True).start()
         return {
