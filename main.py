@@ -1,5 +1,6 @@
 import os
 import time
+import shutil
 import threading
 import subprocess
 
@@ -90,6 +91,7 @@ class Upload(Resource):
                 os.remove(output_path)
         save_path = os.path.join(save_dir, 'raw.mp4')
         file.save(save_path)
+        shutil.copy(os.path.join(save_dir, 'test.mp4'), save_path)
         threading.Thread(target=pipeline_runner, args=(save_path,), daemon=True).start()
         return {
             'message': 'Upload successful',
@@ -132,7 +134,7 @@ class Voice(Resource):
         time.sleep(3)
         if flag == 0:
             flag = 1
-            return {'position': 20000}, 200
+            return {'position': 284500}, 200
         else:
             flag = 0
             mp3_path = os.path.join(os.getcwd(), DATA_DIR, 'reply.mp3')
