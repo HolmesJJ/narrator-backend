@@ -137,9 +137,6 @@ class Voice(Resource):
             return {'status': 1}, 200
         elif flag == 1:
             flag = 2
-            return {'status': 2}, 200
-        elif flag == 2:
-            flag = 3
             return {'position': 284800}, 200
         else:
             flag = 0
